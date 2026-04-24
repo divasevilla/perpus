@@ -77,11 +77,6 @@
                 </select>
             </div>
         </div>
-        <div class="form-group">
-            <label class="form-label" for="alamat">Alamat</label>
-            <input id="alamat" type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" placeholder="Kota, Provinsi" required>
-        </div>
-
         <button type="submit" class="btn-primary" id="btn-register" style="margin-top:8px;">Daftar Sekarang →</button>
     </form>
 

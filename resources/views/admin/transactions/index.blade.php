@@ -9,13 +9,6 @@
 <!-- Filter -->
 <form method="GET" style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
     <input type="text" name="search" class="form-control" style="max-width:240px;" placeholder="Cari nama/buku..." value="{{ request('search') }}">
-    <select name="status" class="form-control" style="max-width:160px;">
-        <option value="">Semua Status</option>
-        <option value="menunggu"  {{ request('status') === 'menunggu'  ? 'selected' : '' }}>Menunggu</option>
-        <option value="dipinjam"  {{ request('status') === 'dipinjam'  ? 'selected' : '' }}>Dipinjam</option>
-        <option value="ditolak" {{ request('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-        <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
-    </select>
     <button type="submit" class="btn btn-ghost">Filter</button>
     @if(request()->hasAny(['search','status']))
         <a href="{{ route('admin.transactions.index') }}" class="btn btn-ghost">Reset</a>
@@ -27,7 +20,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Anggota</th>
                     <th>Buku</th>
                     <th>Tgl Pinjam</th>
@@ -43,7 +36,7 @@
                     <td>{{ $transactions->firstItem() + $loop->index }}</td>
                     <td>
                         <div style="font-weight:600;">{{ $t->mahasiswa->nama_lengkap ?? '-' }}</div>
-                        <div style="font-size:0.7rem;color:var(--text-muted);">{{ $t->mahasiswa->nim ?? '' }}</div>
+                        <div style="font-size:0.7rem;color:var(--text-muted);">{{ $t->mahasiswa->nisn ?? '' }}</div>
                     </td>
                     <td>{{ $t->book->nama_buku ?? '-' }}</td>
                     <td>{{ $t->tanggal_pinjam?->format('d M Y') }}</td>

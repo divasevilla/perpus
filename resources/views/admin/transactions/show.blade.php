@@ -11,10 +11,9 @@
         <div class="card-header"><span class="card-title">👤 Info Anggota</span></div>
         <table style="font-size:.85rem;">
             <tr><td style="color:var(--text-muted);padding:6px 0;width:130px;">Nama</td><td><strong>{{ $transaction->mahasiswa->nama_lengkap ?? '-' }}</strong></td></tr>
-            <tr><td style="color:var(--text-muted);padding:6px 0;">NIM</td><td>{{ $transaction->mahasiswa->nim ?? '-' }}</td></tr>
+            <tr><td style="color:var(--text-muted);padding:6px 0;">NISN</td><td>{{ $transaction->mahasiswa->nisn ?? '-' }}</td></tr>
             <tr><td style="color:var(--text-muted);padding:6px 0;">Jurusan</td><td>{{ $transaction->mahasiswa->jurusan ?? '-' }}</td></tr>
-            <tr><td style="color:var(--text-muted);padding:6px 0;">Prodi</td><td>{{ $transaction->mahasiswa->prodi ?? '-' }}</td></tr>
-            <tr><td style="color:var(--text-muted);padding:6px 0;">No. Telp</td><td>{{ $transaction->mahasiswa->no_telepon ?? '-' }}</td></tr>
+            <tr><td style="color:var(--text-muted);padding:6px 0;">Kelas</td><td>{{ $transaction->mahasiswa->kelas ?? '-' }}</td></tr>
         </table>
     </div>
 

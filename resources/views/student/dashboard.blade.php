@@ -10,7 +10,7 @@
 <div style="margin-bottom:24px;">
     <h3 style="font-size:1.2rem;font-weight:700;">Halo, {{ auth()->user()->mahasiswa->nama_lengkap ?? auth()->user()->name }}! 👋</h3>
     <p style="color:var(--text-muted);font-size:.875rem;margin-top:4px;">
-        NIM: {{ auth()->user()->mahasiswa->nim ?? '-' }} &bull; {{ auth()->user()->mahasiswa->prodi ?? '-' }}
+        NISN: {{ auth()->user()->mahasiswa->nisn ?? '-' }} &bull; {{ auth()->user()->mahasiswa->prodi ?? '-' }}
     </p>
 </div>
 

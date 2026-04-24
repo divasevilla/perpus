@@ -27,7 +27,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Nama Buku</th>
                     <th>Pengarang</th>
                     <th>Kategori</th>

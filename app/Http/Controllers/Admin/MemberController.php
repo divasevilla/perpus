@@ -16,9 +16,11 @@ class MemberController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('nama_lengkap', 'like', "%{$search}%")
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_lengkap', 'like', "%{$search}%")
                   ->orWhere('nisn', 'like', "%{$search}%")
                   ->orWhere('jurusan', 'like', "%{$search}%");
+            });
         }
 
         $members = $query->paginate(10)->withQueryString();
@@ -34,76 +36,89 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'         => 'required|string|max:255',
-            'email'        => 'required|email|unique:users,email',
-            'password'     => 'required|string|min:6',
-            'nisn'         => 'required|string|unique:mahasiswas,nisn',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'alamat' => 'required|string|max:255',
+            'nisn' => 'required',
             'nama_lengkap' => 'required|string|max:255',
-            'jurusan'      => 'required|string|in:RPL,TPL,TO,BC,ANIM',
-            'kelas'        => 'required|string|in:10,11,12',
-            'alamat'       => 'required|string',
+            'jurusan' => 'required',
+            'kelas' => 'required',
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => 'student',
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
         ]);
 
         Mahasiswa::create([
-            'user_id'      => $user->id,
-            'nisn'         => $request->nisn,
+            'user_id' => $user->id,
+            'nisn' => $request->nisn,
             'nama_lengkap' => $request->nama_lengkap,
-            'jurusan'      => $request->jurusan,
-            'kelas'        => $request->kelas,
-            'alamat'       => $request->alamat,
+            'jurusan' => $request->jurusan,
+            'kelas' => $request->kelas,
+            'alamat' => $request->alamat,
         ]);
 
-        return redirect()->route('admin.members.index')->with('success', 'Anggota berhasil ditambahkan.');
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Anggota berhasil ditambahkan!');
     }
 
-    public function edit(Mahasiswa $member)
+    // 🔥 EDIT
+    public function edit($id)
     {
-        $member->load('user');
+        $member = Mahasiswa::with('user')->findOrFail($id);
         return view('admin.members.edit', compact('member'));
     }
 
-    public function update(Request $request, Mahasiswa $member)
+    // 🔥 UPDATE (INI YANG BELUM ADA TADI)
+    public function update(Request $request, $id)
     {
+        $member = Mahasiswa::with('user')->findOrFail($id);
+
         $request->validate([
-            'name'         => 'required|string|max:255',
-            'email'        => 'required|email|unique:users,email,' . $member->user_id,
-            'nisn'         => 'required|string|unique:mahasiswas,nisn,' . $member->id_mahasiswa . ',id_mahasiswa',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $member->user->id,
+            'alamat' => 'required|string|max:255',
+            'nisn' => 'required',
             'nama_lengkap' => 'required|string|max:255',
-            'jurusan'      => 'required|string|in:RPL,TPL,TO,BC,ANIM',
-            'kelas'        => 'required|string|in:10,11,12',
-            'alamat'       => 'required|string',
+            'jurusan' => 'required',
+            'kelas' => 'required',
         ]);
 
+        // update user
         $member->user->update([
-            'name'  => $request->name,
+            'name' => $request->name,
             'email' => $request->email,
         ]);
 
-        if ($request->filled('password')) {
-            $member->user->update(['password' => Hash::make($request->password)]);
-        }
-
+        // update mahasiswa
         $member->update([
-            'nisn'         => $request->nisn,
+            'nisn' => $request->nisn,
             'nama_lengkap' => $request->nama_lengkap,
-            'jurusan'      => $request->jurusan,
-            'kelas'        => $request->kelas,
-            'alamat'       => $request->alamat,
+            'jurusan' => $request->jurusan,
+            'kelas' => $request->kelas,
+            'alamat' => $request->alamat,
         ]);
 
-        return redirect()->route('admin.members.index')->with('success', 'Anggota berhasil diperbarui.');
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Data berhasil diupdate!');
     }
 
-    public function destroy(Mahasiswa $member)
+    // 🔥 DELETE (BIAR TOMBOL HAPUS JALAN)
+    public function destroy($id)
     {
-        $member->user->delete(); // cascade delete mahasiswa
-        return redirect()->route('admin.members.index')->with('success', 'Anggota berhasil dihapus.');
+        $member = Mahasiswa::with('user')->findOrFail($id);
+
+        // hapus user juga
+        if ($member->user) {
+            $member->user->delete();
+        }
+
+        $member->delete();
+
+        return redirect()->route('admin.members.index')
+            ->with('success', 'Data berhasil dihapus!');
     }
 }

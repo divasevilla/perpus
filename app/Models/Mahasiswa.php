@@ -17,8 +17,8 @@ class Mahasiswa extends Model
         'nisn',
         'nama_lengkap',
         'jurusan',
-        'alamat',
         'kelas',
+        'alamat' // 🔥 FIX DI SINI
     ];
 
     public function user()

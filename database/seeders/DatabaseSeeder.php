@@ -32,8 +32,8 @@ class DatabaseSeeder extends Seeder
             'user_id'      => $student->id,
             'nisn'         => '00072444',
             'nama_lengkap' => 'Diva Sevilla',
-            'jurusan'      => 'RPL, TPL, TO', 
-            'kelas'        => '10, 11, 12'      
+            'jurusan'      => 'RPL', 
+            'kelas'        => '12'      
           ]);
 
         // Sample books

@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $data = [
             'total_buku'      => Book::count(),
             'total_anggota'   => Mahasiswa::count(),
-            'total_pinjam'    => Transaction::whereIn('status', ['menunggu', 'dipinjam'])->count(),
+            'total_pinjam'    => Transaction::whereIn('status', ['menunggu', 'dipinjam','ditolak','selesai'])->count(),
             'total_kembali'   => Transaction::where('status', 'selesai')->count(),
             'transaksi_terbaru' => Transaction::with(['mahasiswa', 'book'])
                                     ->latest()

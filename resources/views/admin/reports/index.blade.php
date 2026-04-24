@@ -32,7 +32,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Anggota</th>
                     <th>Buku</th>
                     <th>Tgl Pinjam</th>

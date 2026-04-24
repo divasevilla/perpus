@@ -58,7 +58,6 @@ class AuthController extends Controller
             'nama_lengkap'=> 'required|string|max:255',
             'jurusan'     => 'required|string|in:RPL,TPL,TO,BC,ANIM',
             'kelas'       => 'required|string|in:10,11,12',
-            'alamat'      => 'required|string',
         ], [
             'email.unique'        => 'Email sudah terdaftar.',
             'nisn.unique'         => 'NISN sudah terdaftar.',
@@ -81,7 +80,6 @@ class AuthController extends Controller
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan'      => $request->jurusan,
             'kelas'        => $request->kelas,
-            'alamat'       => $request->alamat,
         ]);
 
         Auth::login($user);

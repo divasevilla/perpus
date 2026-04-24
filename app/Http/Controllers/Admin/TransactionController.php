@@ -13,14 +13,22 @@ class TransactionController extends Controller
     {
         $query = Transaction::with(['mahasiswa', 'book'])->latest();
 
+        // OPTIONAL: kalau filter status masih dipakai
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
+        // SEARCH
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('mahasiswa', fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%"))
-                  ->orWhereHas('book', fn($q) => $q->where('nama_buku', 'like', "%{$search}%"));
+
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('mahasiswa', function ($q2) use ($search) {
+                    $q2->where('nama_lengkap', 'like', "%{$search}%");
+                })->orWhereHas('book', function ($q2) use ($search) {
+                    $q2->where('nama_buku', 'like', "%{$search}%");
+                });
+            });
         }
 
         $transactions = $query->paginate(10)->withQueryString();
@@ -37,23 +45,37 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         $request->validate([
-            'status' => 'required|in:dipinjam,ditolak,selesai',
+            'status' => 'required|in:menunggu,dipinjam,ditolak,selesai',
         ]);
 
         $data = ['status' => $request->status];
 
-        if ($request->status === 'ditolak') {
-            // Jika ditolak, kembalikan stok buku
-            $transaction->book->increment('stok_buku');
-        } elseif ($request->status === 'selesai') {
-            $tanggalKembali = Carbon::today();
-            $data['tanggal_kembali'] = $tanggalKembali;
-            $data['denda'] = $transaction->hitungDenda();
+        switch ($request->status) {
 
-            // Kembalikan stok buku
-            $transaction->book->increment('stok_buku');
-        } elseif ($request->status === 'dipinjam') {
-            $data['tanggal_pinjam'] = Carbon::today();
+            case 'menunggu':
+                // reset semua (opsional)
+                $data['tanggal_pinjam'] = null;
+                $data['tanggal_kembali'] = null;
+                $data['denda'] = 0;
+                break;
+
+            case 'dipinjam':
+                $data['tanggal_pinjam'] = Carbon::today();
+                break;
+
+            case 'ditolak':
+                // kembalikan stok
+                $transaction->book->increment('stok_buku');
+                break;
+
+            case 'selesai':
+                $tanggalKembali = Carbon::today();
+                $data['tanggal_kembali'] = $tanggalKembali;
+                $data['denda'] = $transaction->hitungDenda();
+
+                // kembalikan stok
+                $transaction->book->increment('stok_buku');
+                break;
         }
 
         $transaction->update($data);

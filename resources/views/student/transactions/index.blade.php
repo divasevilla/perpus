@@ -17,7 +17,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Buku</th>
                     <th>Tgl Pinjam</th>
                     <th>Batas Kembali</th>

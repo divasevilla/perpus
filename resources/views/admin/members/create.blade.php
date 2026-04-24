@@ -26,6 +26,11 @@
                 <input id="password" type="password" name="password" class="form-control" placeholder="Min. 6 karakter" required>
                 @error('password')<div class="form-error">{{ $message }}</div>@enderror
             </div>
+            <div class="form-group" style="grid-column:1/-1;">
+                <label class="form-label" for="alamat">Alamat</label>
+                <input id="alamat" type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" required>
+                @error('alamat')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
         </div>
 
         <div style="height:1px;background:var(--border);margin:8px 0 16px;"></div>
@@ -62,11 +67,6 @@
                     <option value="12" {{ old('kelas') === '12' ? 'selected' : '' }}>12</option>
                 </select>
                 @error('kelas')<div class="form-error">{{ $message }}</div>@enderror
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="alamat">Alamat</label>
-                <input id="alamat" type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" required>
-                @error('alamat')<div class="form-error">{{ $message }}</div>@enderror
             </div>
         </div>
 
